@@ -1,0 +1,6 @@
+{
+  "addr": "127.0.0.1:10143",
+  "upstream": "imap.google.com:993",
+  "allowInsecureAuth": true,
+  "autoLogout":  "30m"
+}

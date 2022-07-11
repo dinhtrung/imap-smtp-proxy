@@ -5,6 +5,7 @@ import (
 	"github.com/dinhtrung/imap-smtp-proxy/pkg/util"
 	"github.com/emersion/go-smtp"
 	"log"
+	"time"
 )
 
 // StartSMTPServer start the SMTP server
@@ -18,10 +19,14 @@ func StartSMTPServer(ctx context.Context, be smtp.Backend, cfg *util.SMTPServerW
 		s.Domain = *cfg.Domain
 	}
 	if cfg.ReadTimeout != nil {
-		s.ReadTimeout = *cfg.ReadTimeout
+		if readTimeout, err := time.ParseDuration(*cfg.ReadTimeout); err == nil {
+			s.ReadTimeout = readTimeout
+		}
 	}
 	if cfg.WriteTimeout != nil {
-		s.WriteTimeout = *cfg.WriteTimeout
+		if writeTimeout, err := time.ParseDuration(*cfg.WriteTimeout); err == nil {
+			s.WriteTimeout = writeTimeout
+		}
 	}
 	if cfg.MaxMessageBytes != nil {
 		s.MaxMessageBytes = int(*cfg.MaxMessageBytes)

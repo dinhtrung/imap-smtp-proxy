@@ -6,6 +6,7 @@ import (
 	"github.com/emersion/go-imap/backend"
 	"github.com/emersion/go-imap/server"
 	"log"
+	"time"
 )
 
 // StartIMAPServer start the IMAP server
@@ -16,7 +17,9 @@ func StartIMAPServer(ctx context.Context, bkd backend.Backend, settings *util.IM
 		s.Addr = *settings.Addr
 	}
 	if settings.AutoLogout != nil {
-		s.AutoLogout = *settings.AutoLogout
+		if autoLogout, err := time.ParseDuration(*settings.AutoLogout); err == nil {
+			s.AutoLogout = autoLogout
+		}
 	}
 	if settings.AllowInsecureAuth != nil {
 		s.AllowInsecureAuth = *settings.AllowInsecureAuth
