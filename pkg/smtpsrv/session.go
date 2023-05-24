@@ -1,8 +1,10 @@
 package smtpsrv
 
 import (
+	"github.com/emersion/go-sasl"
 	"github.com/emersion/go-smtp"
 	"io"
+	"log"
 )
 
 type session struct {
@@ -10,12 +12,18 @@ type session struct {
 	be *SMTPProxyBackend
 }
 
-func (s *session) Reset() {
-	s.c.Reset()
+func (s *session) AuthPlain(username, password string) error {
+	return s.c.Auth(sasl.NewPlainClient(username, username, password))
 }
 
-func (s *session) Mail(from string, opts smtp.MailOptions) error {
-	return s.c.Mail(from, &opts)
+func (s *session) Reset() {
+	if err := s.c.Reset(); err != nil {
+		log.Printf("unable to reset session: %v", err)
+	}
+}
+
+func (s *session) Mail(from string, opts *smtp.MailOptions) error {
+	return s.c.Mail(from, opts)
 }
 
 func (s *session) Rcpt(to string) error {
@@ -30,7 +38,9 @@ func (s *session) Data(r io.Reader) error {
 
 	_, err = io.Copy(wc, r)
 	if err != nil {
-		wc.Close()
+		if err := wc.Close(); err != nil {
+			log.Printf("unable to write data: %v", err)
+		}
 		return err
 	}
 

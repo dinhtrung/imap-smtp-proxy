@@ -14,7 +14,7 @@ go-update:
 build: smtp imap
 
 imap:
-	$(GOBUILD) -o pkg/package/imap-proxy cmd/imap-proxy/*.go
+	$(GOBUILD) -o build/package/imap-proxy cmd/imap-proxy/*.go
 
 smtp:
-	$(GOBUILD) -o pkg/package/smtp-proxy cmd/smtp-proxy/*.go
+	$(GOBUILD) -o build/package/smtp-proxy cmd/smtp-proxy/*.go
