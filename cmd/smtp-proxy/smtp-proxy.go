@@ -8,8 +8,8 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/dinhtrung/imap-smtp-proxy/pkg/smtpsrv"
 	"github.com/dinhtrung/imap-smtp-proxy/pkg/util"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
 var configFile string
@@ -20,7 +20,7 @@ func main() {
 	flag.StringVar(&configFile, "c", "configs/smtp-proxy.json", "Configuration for SMTP server")
 	flag.Parse()
 
-	configFileData, err := ioutil.ReadFile(configFile)
+	configFileData, err := os.ReadFile(configFile)
 	if err != nil {
 		log.Fatal(fmt.Errorf("unable to read config file %s: %s", configFile, err))
 	}
