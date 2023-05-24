@@ -11,10 +11,19 @@ go-update:
 	go get -u ./...
 
 # begin of build script
-build: smtp imap
+build: clean smtp imap
 
 imap:
 	$(GOBUILD) -o build/package/imap-proxy cmd/imap-proxy/*.go
 
 smtp:
 	$(GOBUILD) -o build/package/smtp-proxy cmd/smtp-proxy/*.go
+
+# Static Builds
+build-static: clean smtp-static imap-static
+
+imap-static:
+	$(GOSTATICBUILD) -o build/package/imap-proxy cmd/imap-proxy/*.go
+
+smtp-static:
+	$(GOSTATICBUILD) -o build/package/smtp-proxy cmd/smtp-proxy/*.go
